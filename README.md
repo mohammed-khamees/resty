@@ -21,7 +21,7 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 ### Deployment
 
-[https://facebook.github.io/create-react-app/docs/deployment](https://hardcore-lovelace-10a963.netlify.app/)
+[deployment on netlify](https://hardcore-lovelace-10a963.netlify.app/)
 
 ### UML
 

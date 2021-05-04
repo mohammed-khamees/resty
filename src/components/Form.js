@@ -1,126 +1,91 @@
 import React from 'react';
 import './../style/Form.scss';
 
-class Form extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			url: '',
-			method: '',
-			flag: false,
-		};
-	}
-
-	handleWrite = (e) => {
+const Form = ({ handler }) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		e.target.style.backgoundColor = 'white';
-		const url =
-			e.target.parentElement.parentElement.firstChild.nextSibling.value;
+		try {
+			let method = e.target.method.value;
+			const raw = await fetch(e.target.url.value, {
+				method: method,
+				headers: {
+					'Content-type': 'application/json',
+				},
+			});
 
-		const method = e.target.previousSibling.value;
-		this.setState({ url, method });
-	};
+			const data = await raw.json();
 
-	handleMethod = (e) => {
-		e.preventDefault();
-		const url = e.target.parentElement.firstChild.nextSibling.value;
-		if (url && !this.state.flag) {
-			this.setState({ ...this.state, flag: true });
-		} else {
-			this.setState({ ...this.state, flag: false });
+			handler(data);
+		} catch (error) {
+			console.error(error);
 		}
 	};
 
-	render() {
-		return (
-			<div className="request">
-				<form>
-					<label htmlFor="url">URL:</label>
+	return (
+		<div className="request">
+			<form onSubmit={handleSubmit}>
+				<label htmlFor="url">URL: </label>
+				<input
+					type="url"
+					name="url"
+					id="url"
+					placeholder="Enter request URL"
+					required
+				/>
+				<div className="btns">
 					<input
-						type="url"
-						name="url"
-						id="url"
-						placeholder="Enter request URL"
+						type="radio"
+						name="method"
+						className="method"
+						id="get"
+						value="GET"
 						required
+						hidden
 					/>
+					<label htmlFor="get" className="methodLabel">
+						Get
+					</label>
 					<input
-						type="submit"
-						value="GO!"
-						onClick={this.handleMethod}
-						className="btn"
+						type="radio"
+						name="method"
+						className="method"
+						id="post"
+						value="POST"
+						required
+						hidden
 					/>
-					{this.state.flag && (
-						<div className="btns">
-							<input
-								type="radio"
-								name="method"
-								className="method"
-								id="get"
-								value="get"
-								hidden
-							/>
-							<label
-								htmlFor="get"
-								onClick={this.handleWrite}
-								className="methodLabel"
-							>
-								Get
-							</label>
-							<input
-								type="radio"
-								name="method"
-								className="method"
-								id="post"
-								value="post"
-								hidden
-							/>
-							<label
-								htmlFor="post"
-								className="methodLabel"
-								onClick={this.handleWrite}
-							>
-								Post
-							</label>
-							<input
-								type="radio"
-								name="method"
-								className="method"
-								id="put"
-								value="put"
-								hidden
-							/>
-							<label
-								htmlFor="put"
-								className="methodLabel"
-								onClick={this.handleWrite}
-							>
-								Put
-							</label>
-							<input
-								type="radio"
-								name="method"
-								className="method"
-								id="delete"
-								value="delete"
-								hidden
-							/>
-							<label
-								htmlFor="delete"
-								className="methodLabel"
-								onClick={this.handleWrite}
-							>
-								Delete
-							</label>
-						</div>
-					)}
-				</form>
-				<div className="result">
-					{this.state.method} &nbsp;&nbsp;&nbsp;{this.state.url}
+					<label htmlFor="post" className="methodLabel">
+						Post
+					</label>
+					<input
+						type="radio"
+						name="method"
+						className="method"
+						id="put"
+						value="PUT"
+						required
+						hidden
+					/>
+					<label htmlFor="put" className="methodLabel">
+						Put
+					</label>
+					<input
+						type="radio"
+						name="method"
+						className="method"
+						id="delete"
+						value="DELETE"
+						required
+						hidden
+					/>
+					<label htmlFor="delete" className="methodLabel">
+						Delete
+					</label>
 				</div>
-			</div>
-		);
-	}
-}
+				<input type="submit" value="GO!" className="btn" />
+			</form>
+		</div>
+	);
+};
 
 export default Form;
