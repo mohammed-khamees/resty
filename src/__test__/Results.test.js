@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Results from './../components/Results';
+// import JSONPretty from 'react-json-pretty';
 
 test('renders Results component', () => {
 	const headers = [
@@ -256,11 +257,10 @@ test('renders Results component', () => {
 	render(<Results Results={results} headers={headers} />);
 	const items = screen.getByTitle('paragraph');
 	expect(items).toHaveTextContent('Obi-Wan Kenobi');
-	expect(items).toContainHTML(
-		`<pre class="result" title="paragraph">"Header": ${JSON.stringify(
-			headers[0],
-			null,
-			2,
-		)}<br /><br />"Response": ${JSON.stringify(results, null, 2)}</pre>`,
-	);
+	// expect(items).toContainHTML(
+	// 	`<div class="result" title="paragraph">
+	// 		${(<JSONPretty id="json-pretty" data={headers[0]}></JSONPretty>)}
+	// 		${(<JSONPretty id="json-pretty" data={results}></JSONPretty>)}
+	// 	</div>`,
+	// );
 });
