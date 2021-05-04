@@ -4,6 +4,10 @@
 	box-sizing: border-box;
 }
 
+body {
+	background-color: rgb(238, 232, 232);
+}
+
 footer {
 	line-height: 50px;
 	background: rgb(118, 118, 118);
@@ -11,8 +15,6 @@ footer {
 	font-size: 0.7rem;
 	color: black;
 	padding-left: 2rem;
-	position: absolute;
-	bottom: 0;
-	left: 0;
 	width: 100%;
+	margin-top: auto;
 }
