@@ -1,7 +1,15 @@
 import React from 'react';
 import './../style/Form.scss';
 
-const Form = ({ handler, loading, apiStorage, urlValue, methodVal }) => {
+const Form = ({
+	handler,
+	loading,
+	apiStorage,
+	urlValue,
+	methodVal,
+	locationUrl,
+	locationMethod,
+}) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
@@ -17,8 +25,11 @@ const Form = ({ handler, loading, apiStorage, urlValue, methodVal }) => {
 					},
 				});
 
-				loading();
+				if (raw.type === 'basic') return loading(raw.type);
+
 				data = await raw.json();
+
+				loading(raw.type);
 				apiStorage(method, e.target.url.value, data);
 			} else if (method === 'POST' || method === 'PUT') {
 				const raw = await fetch(e.target.url.value, {
@@ -28,8 +39,11 @@ const Form = ({ handler, loading, apiStorage, urlValue, methodVal }) => {
 					},
 					body: body,
 				});
-				loading();
+				if (raw.type === 'basic') return loading(raw.type);
+
 				data = await raw.json();
+
+				loading(raw.type);
 				apiStorage(method, e.target.url.value, data);
 			} else if (method === 'DELETE') {
 				const raw = await fetch(e.target.url.value, {
@@ -38,13 +52,16 @@ const Form = ({ handler, loading, apiStorage, urlValue, methodVal }) => {
 						'Content-type': 'application/json',
 					},
 				});
-				loading();
+				if (raw.type === 'basic') return loading(raw.type);
+
 				data = await raw.json();
+
+				loading(raw.type);
 				apiStorage(method, e.target.url.value, data);
 			}
 
 			loading();
-			handler(data);
+			handler(data, 0);
 		} catch (error) {
 			console.error(error);
 		}
@@ -60,10 +77,10 @@ const Form = ({ handler, loading, apiStorage, urlValue, methodVal }) => {
 					id="url"
 					placeholder="Enter request URL"
 					required={urlValue ? false : true}
-					defaultValue={urlValue && urlValue}
+					defaultValue={(urlValue && urlValue) || (locationUrl && locationUrl)}
 				/>
 				<div className="btns">
-					{methodVal === 'GET' ? (
+					{methodVal === 'GET' || locationMethod === 'GET' ? (
 						<input
 							type="radio"
 							name="method"
@@ -89,7 +106,7 @@ const Form = ({ handler, loading, apiStorage, urlValue, methodVal }) => {
 					<label htmlFor="get" className="methodLabel">
 						Get
 					</label>
-					{methodVal === 'POST' ? (
+					{methodVal === 'POST' || locationMethod === 'POST' ? (
 						<input
 							type="radio"
 							name="method"
@@ -115,7 +132,7 @@ const Form = ({ handler, loading, apiStorage, urlValue, methodVal }) => {
 					<label htmlFor="post" className="methodLabel">
 						Post
 					</label>
-					{methodVal === 'PUT' ? (
+					{methodVal === 'PUT' || locationMethod === 'PUT' ? (
 						<input
 							type="radio"
 							name="method"
@@ -141,7 +158,7 @@ const Form = ({ handler, loading, apiStorage, urlValue, methodVal }) => {
 					<label htmlFor="put" className="methodLabel">
 						Put
 					</label>
-					{methodVal === 'DELETE' ? (
+					{methodVal === 'DELETE' || locationMethod === 'DELETE' ? (
 						<input
 							type="radio"
 							name="method"
